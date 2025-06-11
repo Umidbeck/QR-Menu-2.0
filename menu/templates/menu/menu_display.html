@@ -1,0 +1,46 @@
+{% extends 'menu/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <header>
+    <h1>{% if category %}{{ category.name }}{% else %}Все Категории{% endif %}</h1>
+    <div class="category-navigation">
+      <a href="{% url 'menu_display' %}" class="btn btn-outline-primary {% if not category %}active{% endif %}">
+        Все
+      </a>
+      {% for cat in categories %}
+        {% if cat.slug %}
+        <a href="{% url 'menu_by_category' cat.slug %}" class="btn btn-outline-primary {% if category.id == cat.id %}active{% endif %}">
+          {{ cat.name }}
+        </a>
+        {% else %}
+        <span class="btn btn-outline-secondary">{{ cat.name }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </header>
+
+  <div class="products-grid">
+    {% for product in products %}
+      <div class="product-card">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+        {% else %}
+          <div class="no-image">No Image</div>
+        {% endif %}
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <p class="description">{{ product.description|default:'' }}</p>
+          <p class="price">{{ product.price }} сум</p>
+        </div>
+      </div>
+    {% empty %}
+      <div class="no-products">
+        <p>Продукты не найдены.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
